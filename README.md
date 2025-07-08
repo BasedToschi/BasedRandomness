@@ -460,9 +460,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⚠️ Disclaimer**: This contract is provided as-is, without warranties. Although designed with security in mind, it is essential to recognize that no randomness system is infallible. It is crucial to implement appropriate security measures tailored to your specific use case. As this system is in the research and development phase, future improvements are expected. We will strive to ensure retrocompatibility with the IBasedRandomness interface, making it highly advisable to integrate support for updating the Randomness contract within your application to ensure seamless transitions to future versions.
 
-**🔗 Links**:
-- [Contract on BaseScan](https://sepolia.basescan.org/address/CONTRACT_ADDRESS)
-- [Documentation](https://docs.basedrandomness.com)
-- [Discord Community](https://discord.gg/basedrandomness)
-
 Built with ❤️ by BasedToschi
