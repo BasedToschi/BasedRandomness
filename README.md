@@ -15,7 +15,6 @@
 - [🔒 Security Analysis](#-security-analysis)
 - [⛽ Gas Optimization](#-gas-optimization)
 - [⚠️ Limitations & Considerations](#️-limitations--considerations)
-- [🛠️ Development](#️-development)
 
 ## 🎯 Overview
 
