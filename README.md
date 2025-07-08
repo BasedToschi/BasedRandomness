@@ -93,6 +93,8 @@ Three Consecutive Blocks: (1/1,000,000)³ = 0.000000000001%
 
 BasedRandomness is perfect for applications requiring **unpredictable, fair outcomes**:
 
+With based randomness, if you ask 2 or more number in a single range you have 100% secuiry that each numbers generated are unique
+
 **🎲 Gaming & Entertainment:**
 - Need 1 number from 1-6 (dice roll)
 - Need 5 numbers from 1-100 (lottery tickets)
@@ -184,7 +186,7 @@ uint256[] memory numbers = basedRandomness.generateRandomNumbers(requestId);
 ### 🛡️ **Manipulation Resistance**
 The two-step process makes manipulation extremely difficult:
 
-1. **Preparation locks entropy** from current block + DEX state
+1. **Preparation locks entropy** from current block + DEX state or custom entrophy
 2. **Generation uses future blocks** that are unpredictable at preparation time
 3. **Triggering generation** cannot influence the outcome - it only reveals results based on already-mined blocks
 
@@ -196,12 +198,6 @@ The two-step process makes manipulation extremely difficult:
 | ❌ Oracle fees | ✅ Gas-only costs |
 | ❌ Latency delays | ✅ Predictable timing |
 | ❌ Centralization risk | ✅ Decentralized |
-
-### 🔒 **Security Through Unpredictability**
-
-- **Entropy Sources**: 6 DEX pools + block data = 8 independent sources
-- **Temporal Separation**: Future blocks are unpredictable at preparation
-- **Collision Resolution**: Advanced algorithm ensures uniqueness with minimal gas
 
 ## 💡 Parameter Guide & Usage Patterns
 
@@ -274,41 +270,8 @@ The two-step process makes manipulation extremely difficult:
 - **Maximum Wait**: 54 blocks (4 + 50 extra security)
 - **EVM Requirement**: Cancun-compatible chains only
 
-#### **Gas Considerations**
-- **Preparation**: ~50,000-200,000 gas depending on entropy
-- **Generation**: ~30,000 gas per number + collision resolution
-- **Batch Operations**: More efficient than individual requests
-- **Heavy Collision**: Dense ranges (>80% filled) use more gas
-
 #### **Timing Constraints**
 - **Block Dependency**: Results available 4-54 blocks after preparation
-- **Network Speed**: ~12 seconds per block on Ethereum
-- **Total Delay**: 48 seconds to 10+ minutes depending on extraSecurity
-
-### 🎮 **Usage Pattern Examples**
-
-#### **Gaming Applications**
-- **Dice Games**: `maxNumber=6, count=1, includeZero=false`
-- **Card Dealing**: `maxNumber=52, count=5, includeZero=false` (unique cards)
-- **Loot Drops**: `maxNumber=10000, count=1, includeZero=false` (rarity check)
-- **Multiple Rolls**: `maxNumber=6, count=20, includeZero=false` (twenty dice)
-
-#### **NFT & Digital Assets**
-- **Trait Generation**: `maxNumber=100, count=8, includeZero=false` (percentiles)
-- **Color Selection**: `maxNumber=255, count=3, includeZero=true` (RGB values)
-- **Rarity Assignment**: `maxNumber=1000, count=1, includeZero=false` (rarity tier)
-- **Batch Minting**: `maxNumber=10000, count=100, includeZero=false` (multiple NFTs)
-
-#### **DeFi & Protocols**
-- **Validator Selection**: `maxNumber=validator_count, count=5, includeZero=false`
-- **Liquidation Order**: `maxNumber=position_count, count=10, includeZero=false`
-- **Fee Randomization**: `maxNumber=100, count=1, includeZero=false`
-- **Governance Sampling**: `maxNumber=member_count, count=sample_size, includeZero=false`
-
-#### **Contests & Lotteries**
-- **Winner Selection**: `maxNumber=participant_count, count=winner_count, includeZero=false`
-- **Prize Distribution**: `maxNumber=prize_pool, count=winner_count, includeZero=false`
-- **Airdrop Recipients**: `maxNumber=eligible_count, count=airdrop_count, includeZero=false`
 
 ### 🔄 **Batch Operations**
 
@@ -332,12 +295,6 @@ The two-step process makes manipulation extremely difficult:
 2. **Public Contests**: Use `extraSecurity=2-5` to prevent last-minute manipulation
 3. **Gaming**: Standard security (`extraSecurity=0`) is usually sufficient
 4. **Always Verify**: Check `isRequestReady()` before generation
-
-#### **Gas Optimization**
-1. **Batch When Possible**: Use batch functions for multiple requests
-2. **Avoid Dense Ranges**: Requesting 950/1000 numbers is expensive
-3. **Consider Timing**: More extraSecurity = more gas for generation
-4. **Monitor Costs**: Test gas usage on testnet first
 
 #### **Integration Patterns**
 1. **Store Request IDs**: Keep track of requests for later generation
@@ -447,6 +404,8 @@ BasedRandomness combines **8 independent entropy sources**:
 7. **USDC Total Supply** - Changes with minting/burning
 8. **WETH Total Supply** - Changes with minting/burning
 
+Or you pass your own
+
 ### 🔐 **Manipulation Analysis**
 
 **✅ Low Manipulation Risk:**
@@ -466,51 +425,6 @@ BasedRandomness combines **8 independent entropy sources**:
    - Results are deterministic based on already-mined blocks
    - No advantage to timing the generation call
 
-**⚠️ Acknowledged Limitations:**
-
-1. **Not Perfect**: No on-chain randomness is 100% manipulation-proof
-2. **Miner Influence**: Miners have some influence over block hashes
-3. **DEX Dependency**: Relies on active DEX pools for entropy
-
-**🎯 Risk Assessment: LOW**
-- Manipulation requires coordinated attack across multiple systems
-- Cost of manipulation likely exceeds potential gains
-- Detection mechanisms exist for unusual patterns
-
-### 🔄 **Temporal Separation Security**
-
-The two-step process ensures:
-- **Preparation entropy** locked at time T
-- **Generation entropy** from blocks at time T+4+
-- **Unpredictability gap** makes manipulation extremely difficult
-
-## ⛽ Gas Optimization
-
-### 🚀 **Expanding Circle Search Algorithm**
-
-BasedRandomness uses an innovative collision resolution algorithm:
-
-```solidity
-// Traditional approach: Sequential search
-candidate = 50 (collision)
-Try: 51, 52, 53, 54, 55... // Linear search
-
-// BasedRandomness approach: Expanding circles
-candidate = 50 (collision)
-i=1: Try 51 AND 49 simultaneously
-i=2: Try 52 AND 48 simultaneously  
-i=3: Try 53 AND 47 simultaneously
-// First unique number found = immediate stop!
-```
-
-### 📊 **Gas Usage Comparison**
-
-| Operation | Traditional | BasedRandomness | Savings |
-|-----------|-------------|-----------------|---------|
-| Single Number | ~50,000 gas | ~30,000 gas | 40% |
-| 10 Numbers | ~500,000 gas | ~200,000 gas | 60% |
-| 100 Numbers | ~5,000,000 gas | ~1,500,000 gas | 70% |
-
 ### 🧠 **Transient Storage Optimization**
 
 - Uses `tstore`/`tload` opcodes for temporary data
@@ -525,12 +439,6 @@ i=3: Try 53 AND 47 simultaneously
 2. **Maximum Count**: 1000 numbers per request (gas safety)
 3. **Block Dependency**: Requires 4+ blocks for security
 4. **EVM Version**: Requires Cancun-compatible chains for transient storage
-
-### 🌐 **Network Requirements**
-
-- **Base Sepolia**: Fully supported
-- **Mainnet**: Requires DEX pool addresses
-- **L2 Networks**: Compatible with Cancun upgrade
 
 ### 🎯 **Use Case Suitability**
 
