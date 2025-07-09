@@ -10,7 +10,6 @@
 - [🔧 How It Works](#-how-it-works)
 - [⚡ Why Two-Step Randomness?](#-why-two-step-randomness)
 - [🔒 Security Analysis](#-security-analysis)
-- [⛽ Gas Optimization](#-gas-optimization)
 - [⚠️ Limitations & Considerations](#️-limitations--considerations)
 
 ## 🎯 Overview
